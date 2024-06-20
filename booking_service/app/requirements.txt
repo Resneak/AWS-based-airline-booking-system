@@ -4,3 +4,4 @@ sqlalchemy
 databases
 pydantic
 requests
+boto3
