@@ -17,7 +17,6 @@ import threading
 import time
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from contextlib import asynccontextmanager
-from datetime import datetime
 
 # Create the database tables
 models.Base.metadata.create_all(bind=engine)
@@ -30,44 +29,36 @@ QUEUE_URL = 'https://sqs.us-east-2.amazonaws.com/767397896582/MyQueue.fifo'
 
 # Function to process messages from the SQS queue
 def process_messages():
+    print("Started message processing thread")
     while True:
-        response = sqs_client.receive_message(
-            QueueUrl=QUEUE_URL,
-            MaxNumberOfMessages=1,
-            WaitTimeSeconds=10
-        )
+        try:
+            response = sqs_client.receive_message(
+                QueueUrl=QUEUE_URL,
+                MaxNumberOfMessages=1,
+                WaitTimeSeconds=10
+            )
+            messages = response.get('Messages', [])
+            for message in messages:
+                print(f"Raw message body: {message['Body']}")  # Add this line for debugging
 
-        messages = response.get('Messages', [])
-        for message in messages:
-            #print(f"Raw message body: {message['Body']}")  # Add this line for debugging
-
-            try:
-                # Try to load JSON with double quotes first
                 try:
                     body = json.loads(message['Body'])
-                except json.JSONDecodeError:
-                    # If failed, replace single quotes with double quotes and try again
-                    corrected_body = message['Body'].replace("'", '"')
-                    body = json.loads(corrected_body)
+                    print(f"Received message: {body}")
 
-                # Convert booking_time back to datetime if needed
-                if 'booking_time' in body:
-                    body['booking_time'] = datetime.fromisoformat(body['booking_time'])
+                    # Just print out whatever is in SQS, could send out emails/sms from here
+                    send_notification(body)
 
-                print(f"Received message: {body}")
+                    sqs_client.delete_message(
+                        QueueUrl=QUEUE_URL,
+                        ReceiptHandle=message['ReceiptHandle']
+                    )
+                except json.JSONDecodeError as e:
+                    print(f"JSON decode error: {e}")
+                    print(f"Failed message: {message['Body']}")
 
-                # Just print out whatever is in SQS, could send out emails/sms from here
-                send_notification(body)
-
-                sqs_client.delete_message(
-                    QueueUrl=QUEUE_URL,
-                    ReceiptHandle=message['ReceiptHandle']
-                )
-            except json.JSONDecodeError as e:
-                print(f"JSON decode error: {e}")
-                print(f"Failed message: {message['Body']}")
-
-        time.sleep(5)
+            time.sleep(5)
+        except Exception as e:
+            print(f"Error processing messages: {e}")
 
 # Example function to send a notification (e.g., email, SMS)
 def send_notification(message):
@@ -76,13 +67,13 @@ def send_notification(message):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Lifespan startup")
     # Start processing messages from the SQS queue in a background thread
+    print("Starting lifespan")
     thread = threading.Thread(target=process_messages, daemon=True)
     thread.start()
     yield
-    print("Lifespan shutdown")
-    # Any cleanup code can go here, but in this case, we don't have any
+    print("Lifespan ending, joining thread")
+    thread.join()  # Ensure thread is properly joined on shutdown
 
 # Initialize the FastAPI application with lifespan
 app = FastAPI(lifespan=lifespan)
@@ -99,6 +90,7 @@ def read_notification(notification_id: int, db: Session = Depends(database.get_d
     if db_notification is None:
         raise HTTPException(status_code=404, detail="Notification not found")
     return db_notification
+
 
 
 
