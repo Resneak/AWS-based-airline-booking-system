@@ -5,3 +5,4 @@ databases
 pydantic
 requests
 boto3
+psycopg2-binary
