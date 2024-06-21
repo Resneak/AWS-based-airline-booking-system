@@ -5,6 +5,8 @@
 import crud, models, schemas, database
 from database import engine, SessionLocal
 from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
+from fastapi.responses import StreamingResponse
+import io
 from sqlalchemy.orm import Session
 import requests
 import boto3
@@ -53,6 +55,7 @@ def decrement_flight_seats(flight_details):
 def read_root():
     return {"message": "Welcome to the Booking Service"} # returns message to user when user hits homepage
 
+# upload file to S3 bucket
 @app.post("/upload/{booking_id}")
 async def upload_file(booking_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
     try:
@@ -70,11 +73,14 @@ async def upload_file(booking_id: int, file: UploadFile = File(...), db: Session
     except Exception as e:
         return {"error": str(e)}
 
+# download file from S3 bucket
 @app.get("/download/{filename}")
 async def download_file(filename: str):
     try:
-        s3_client.download_file(BUCKET_NAME, filename, filename)
-        return {"filename": filename}
+        # Download the file from S3
+        s3_response = s3_client.get_object(Bucket=BUCKET_NAME, Key=filename)
+        file_stream = io.BytesIO(s3_response['Body'].read())
+        return StreamingResponse(file_stream, media_type='application/octet-stream', headers={'Content-Disposition': f'attachment; filename={filename}'})
     except Exception as e:
         return {"error": str(e)}
 
