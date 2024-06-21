@@ -96,22 +96,22 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(databas
         remaining_seats = decrement_flight_seats(flight_details)
         created_booking = crud.create_booking(db=db, booking=booking)
         
-        # Send message to SQS
+        # Ensure datetime is serialized properly in the message
         message = {
             "booking_id": created_booking.id,
             "customer_name": created_booking.customer_name,
             "flight_number": created_booking.flight_number,
             "seat_number": created_booking.seat_number,
             "flight_id": created_booking.flight_id,
-            "booking_time": created_booking.booking_time.isoformat()  # Ensure datetime is serialized properly
+            "booking_time": created_booking.booking_time.isoformat()  # Convert datetime to string
         }
         response = sqs_client.send_message(
             QueueUrl=QUEUE_URL,
             MessageBody=json.dumps(message),
-            MessageGroupId="bookingGroup",
-            MessageDeduplicationId=str(created_booking.id)
+            MessageGroupId="bookingGroup",  # Add MessageGroupId here
+            MessageDeduplicationId=str(created_booking.id)  # Add MessageDeduplicationId here
         )
-        print(f"Message sent to SQS: {response['MessageId']}")
+        print(f"Message sent to SQS: {response['MessageId']}")  # Add logging here
         
         return {
             "id": created_booking.id,
@@ -123,7 +123,7 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(databas
             "remaining_seats": remaining_seats
         }
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error: {e}")  # Log the error for debugging
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 # Read a booking by ID
