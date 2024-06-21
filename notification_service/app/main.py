@@ -4,6 +4,9 @@
 # Send notifications
 # Define API endpoints
 
+# Initialize the SQS client
+#sqs_client = boto3.client('sqs', region_name='us-east-2')
+
 import crud, models, schemas, database
 from database import engine, SessionLocal
 from fastapi import FastAPI, Depends, HTTPException
@@ -35,16 +38,22 @@ def process_messages():
 
         messages = response.get('Messages', [])
         for message in messages:
-            body = json.loads(message['Body'])
-            print(f"Received message: {body}")
+            print(f"Raw message body: {message['Body']}")  # Add this line for debugging
 
-            # Just print out whatever is in SQS, could send out emails/sms from here
-            send_notification(body)
+            try:
+                body = json.loads(message['Body'])
+                print(f"Received message: {body}")
 
-            sqs_client.delete_message(
-                QueueUrl=QUEUE_URL,
-                ReceiptHandle=message['ReceiptHandle']
-            )
+                # Just print out whatever is in SQS, could send out emails/sms from here
+                send_notification(body)
+
+                sqs_client.delete_message(
+                    QueueUrl=QUEUE_URL,
+                    ReceiptHandle=message['ReceiptHandle']
+                )
+            except json.JSONDecodeError as e:
+                print(f"JSON decode error: {e}")
+                print(f"Failed message: {message['Body']}")
 
         time.sleep(5)
 
@@ -76,6 +85,7 @@ def read_notification(notification_id: int, db: Session = Depends(database.get_d
     if db_notification is None:
         raise HTTPException(status_code=404, detail="Notification not found")
     return db_notification
+
 
 
 
