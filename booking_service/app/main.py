@@ -14,6 +14,15 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 import json
 from datetime import datetime
 
+# Database configuration for RDS PostgreSQL
+DATABASE_USER = "postgres"
+DATABASE_PASSWORD = "EliteGaming275"
+DATABASE_HOST = "booking-db.crguaws8egqt.us-east-2.rds.amazonaws.com"
+DATABASE_PORT = "5432"
+DATABASE_NAME = "booking-db"
+
+SQLALCHEMY_DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+
 # Create the database tables
 models.Base.metadata.create_all(bind=database.engine)
 
@@ -133,4 +142,3 @@ def read_booking(booking_id: int, db: Session = Depends(get_db)):
     if db_booking is None:
         raise HTTPException(status_code=404, detail="Booking not found")
     return db_booking
-
