@@ -1,53 +1,63 @@
 {
-  "family": "microservices-task",
-  "networkMode": "awsvpc",
-  "containerDefinitions": [
-    {
-      "name": "booking_service",
-      "image": "resneak/cloud-microservices-application-enhanced_booking_service:latest",
-      "cpu": 256,
-      "memory": 512,
-      "essential": true,
-      "portMappings": [
+    "family": "microservices-task",
+    "networkMode": "awsvpc",
+    "executionRoleArn": "arn:aws:iam::767397896582:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::767397896582:role/ecsTaskRole",
+    "containerDefinitions": [
         {
-          "containerPort": 80,
-          "hostPort": 80,
-          "protocol": "tcp"
-        }
-      ]
-    },
-    {
-      "name": "notification_service",
-      "image": "resneak/cloud-microservices-application-enhanced_notification_service:latest",
-      "cpu": 256,
-      "memory": 512,
-      "essential": true,
-      "portMappings": [
+            "name": "booking_service",
+            "image": "resneak/cloud-microservices-application-enhanced_booking_service:latest",
+            "cpu": 256,
+            "memory": 512,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80
+                }
+            ]
+        },
         {
-          "containerPort": 84,
-          "hostPort": 84,
-          "protocol": "tcp"
-        }
-      ]
-    },
-    {
-      "name": "flight_management_service",
-      "image": "resneak/cloud-microservices-application-enhanced_flight_management_service:latest",
-      "cpu": 256,
-      "memory": 512,
-      "essential": true,
-      "portMappings": [
+            "name": "notification_service",
+            "image": "resneak/cloud-microservices-application-enhanced_notification_service:latest",
+            "cpu": 256,
+            "memory": 512,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 84,
+                    "hostPort": 84
+                }
+            ]
+        },
         {
-          "containerPort": 83,
-          "hostPort": 83,
-          "protocol": "tcp"
+            "name": "flight_management_service",
+            "image": "resneak/cloud-microservices-application-enhanced_flight_management_service:latest",
+            "cpu": 256,
+            "memory": 512,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 83,
+                    "hostPort": 83
+                }
+            ]
+        },
+        {
+            "name": "payment_service",
+            "image": "resneak/cloud-microservices-application-enhanced_payment_service:latest",
+            "cpu": 256,
+            "memory": 512,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 82,
+                    "hostPort": 82
+                }
+            ]
         }
-      ]
-    }
-  ],
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "1024",
-  "memory": "2048",
-  "executionRoleArn": "arn:aws:iam::767397896582:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::767397896582:role/ecsTaskRole"
+    ],
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "1024",
+    "memory": "2048"
 }
