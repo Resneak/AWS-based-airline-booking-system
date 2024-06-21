@@ -6,7 +6,7 @@
     "containerDefinitions": [
         {
             "name": "booking_service",
-            "image": "resneak/cloud-microservices-application-enhanced_booking_service:latest",
+            "image": "resneak/booking-service:latest",
             "cpu": 256,
             "memory": 512,
             "essential": true,
@@ -19,7 +19,7 @@
         },
         {
             "name": "notification_service",
-            "image": "resneak/cloud-microservices-application-enhanced_notification_service:latest",
+            "image": "resneak/notification-service:latest",
             "cpu": 256,
             "memory": 512,
             "essential": true,
@@ -32,7 +32,7 @@
         },
         {
             "name": "flight_management_service",
-            "image": "resneak/cloud-microservices-application-enhanced_flight_management_service:latest",
+            "image": "resneak/flight-management-service:latest",
             "cpu": 256,
             "memory": 512,
             "essential": true,
@@ -45,7 +45,7 @@
         },
         {
             "name": "payment_service",
-            "image": "resneak/cloud-microservices-application-enhanced_payment_service:latest",
+            "image": "resneak/payment-service:latest",
             "cpu": 256,
             "memory": 512,
             "essential": true,
