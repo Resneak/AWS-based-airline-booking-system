@@ -10,16 +10,13 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import boto3
 import json
+import threading
 import time
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
-import threading
-import uvicorn
+from contextlib import asynccontextmanager
 
 # Create the database tables
 models.Base.metadata.create_all(bind=engine)
-
-# Initialize the FastAPI application
-app = FastAPI()
 
 # Initialize the SQS client
 sqs_client = boto3.client('sqs', region_name='us-east-2')
@@ -41,7 +38,7 @@ def process_messages():
             body = json.loads(message['Body'])
             print(f"Received message: {body}")
 
-            # just print out whatever is in sqs, could send out emails/sms from here
+            # Just print out whatever is in SQS, could send out emails/sms from here
             send_notification(body)
 
             sqs_client.delete_message(
@@ -56,6 +53,17 @@ def send_notification(message):
     # Implement your notification logic here
     print(f"Sending notification for booking ID: {message['booking_id']}")
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Start processing messages from the SQS queue in a background thread
+    thread = threading.Thread(target=process_messages, daemon=True)
+    thread.start()
+    yield
+    # Any cleanup code can go here, but in this case, we don't have any
+
+# Initialize the FastAPI application with lifespan
+app = FastAPI(lifespan=lifespan)
+
 # Endpoint to create a notification
 @app.post("/notifications/", response_model=schemas.Notification)
 def create_notification(notification: schemas.NotificationCreate, db: Session = Depends(database.get_db)):
@@ -69,9 +77,7 @@ def read_notification(notification_id: int, db: Session = Depends(database.get_d
         raise HTTPException(status_code=404, detail="Notification not found")
     return db_notification
 
-# Start the message processing in a separate thread
-if __name__ == "__main__":
-    threading.Thread(target=process_messages, daemon=True).start()
-    uvicorn.run(app, host="0.0.0.0", port=80)
+
+
 
 
