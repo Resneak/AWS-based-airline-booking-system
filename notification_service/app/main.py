@@ -91,6 +91,12 @@ def read_notification(notification_id: int, db: Session = Depends(database.get_d
         raise HTTPException(status_code=404, detail="Notification not found")
     return db_notification
 
+# Health check endpoint to ensure the service is running
+@app.get("/health")
+def health_check():
+    return {"status": "OK"}
+
+
 
 
 
