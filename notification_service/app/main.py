@@ -16,7 +16,6 @@ import json
 import threading
 import time
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
-from contextlib import asynccontextmanager
 
 # Create the database tables
 models.Base.metadata.create_all(bind=engine)
@@ -65,18 +64,15 @@ def send_notification(message):
     # Implement your notification logic here
     print(f"Sending notification for booking ID: {message['booking_id']}")
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Start processing messages from the SQS queue in a background thread
-    print("Starting lifespan")
+# Initialize the FastAPI application
+app = FastAPI()
+
+# Start the message processing thread on startup
+@app.on_event("startup")
+async def startup_event():
+    print("Starting startup event")
     thread = threading.Thread(target=process_messages, daemon=True)
     thread.start()
-    yield
-    print("Lifespan ending, joining thread")
-    thread.join()  # Ensure thread is properly joined on shutdown
-
-# Initialize the FastAPI application with lifespan
-app = FastAPI(lifespan=lifespan)
 
 # Endpoint to create a notification
 @app.post("/notifications/", response_model=schemas.Notification)
@@ -95,6 +91,7 @@ def read_notification(notification_id: int, db: Session = Depends(database.get_d
 @app.get("/health")
 def health_check():
     return {"status": "OK"}
+
 
 
 
