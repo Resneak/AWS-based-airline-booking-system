@@ -12,6 +12,21 @@ import requests
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 import json
+from pydantic import BaseModel
+from datetime import datetime
+
+class Booking(BaseModel):
+    booking_id: int
+    customer_name: str
+    flight_number: str
+    seat_number: str
+    flight_id: int
+    booking_time: datetime
+
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }
 
 # Create the database tables
 models.Base.metadata.create_all(bind=database.engine)
@@ -110,13 +125,13 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(databas
             "booking_time": str(created_booking.booking_time)
         }
         # Convert the booking to a dictionary
-        booking_dict = booking.dict()
-        
+        booking_dict = booking.dict()  
+
         # Send the booking message to the SQS queue
         response = sqs_client.send_message(
             QueueUrl=QUEUE_URL,
             MessageBody=json.dumps(booking_dict),  # Ensure the message is properly formatted as JSON
-            MessageGroupId='booking_group',  # This is required for FIFO queues
+            MessageGroupId='booking_group',  # Required for FIFO queues
             MessageDeduplicationId=str(booking.booking_id)  # Use a unique identifier for deduplication
         )
         print(f"Message sent to SQS: {response['MessageId']}")
