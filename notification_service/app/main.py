@@ -42,8 +42,14 @@ def process_messages():
             print(f"Raw message body: {message['Body']}")  # Add this line for debugging
 
             try:
-                body = json.loads(message['Body'])
-                
+                # Try to load JSON with double quotes first
+                try:
+                    body = json.loads(message['Body'])
+                except json.JSONDecodeError:
+                    # If failed, replace single quotes with double quotes and try again
+                    corrected_body = message['Body'].replace("'", '"')
+                    body = json.loads(corrected_body)
+
                 # Convert booking_time back to datetime if needed
                 if 'booking_time' in body:
                     body['booking_time'] = datetime.datetime.fromisoformat(body['booking_time'])
