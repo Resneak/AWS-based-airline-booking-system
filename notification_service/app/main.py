@@ -29,31 +29,41 @@ QUEUE_URL = 'https://sqs.us-east-2.amazonaws.com/767397896582/MyQueue.fifo'
 
 # Function to process messages from the SQS queue
 def process_messages():
+    print("Starting to process messages from SQS")
     while True:
-        response = sqs_client.receive_message(
-            QueueUrl=QUEUE_URL,
-            MaxNumberOfMessages=1,
-            WaitTimeSeconds=10
-        )
+        try:
+            response = sqs_client.receive_message(
+                QueueUrl=QUEUE_URL,
+                MaxNumberOfMessages=1,
+                WaitTimeSeconds=10
+            )
 
-        messages = response.get('Messages', [])
-        for message in messages:
-            print(f"Raw message body: {message['Body']}")  # Add this line for debugging
+            messages = response.get('Messages', [])
+            if not messages:
+                print("No messages received")
+            for message in messages:
+                print(f"Raw message body: {message['Body']}")  # Add this line for debugging
 
-            try:
-                body = json.loads(message['Body'])
-                print(f"Received message: {body}")
+                try:
+                    body = json.loads(message['Body'])
+                    print(f"Received message: {body}")
 
-                # Just print out whatever is in SQS, could send out emails/sms from here
-                send_notification(body)
+                    # Just print out whatever is in SQS, could send out emails/sms from here
+                    send_notification(body)
 
-                sqs_client.delete_message(
-                    QueueUrl=QUEUE_URL,
-                    ReceiptHandle=message['ReceiptHandle']
-                )
-            except json.JSONDecodeError as e:
-                print(f"JSON decode error: {e}")
-                print(f"Failed message: {message['Body']}")
+                    sqs_client.delete_message(
+                        QueueUrl=QUEUE_URL,
+                        ReceiptHandle=message['ReceiptHandle']
+                    )
+                except json.JSONDecodeError as e:
+                    print(f"JSON decode error: {e}")
+                    print(f"Failed message: {message['Body']}")
+        except NoCredentialsError:
+            print("Credentials not available")
+        except PartialCredentialsError:
+            print("Incomplete credentials provided")
+        except Exception as e:
+            print(f"Error: {e}")
 
         time.sleep(5)
 
@@ -64,10 +74,12 @@ def send_notification(message):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    print("Lifespan startup")
     # Start processing messages from the SQS queue in a background thread
     thread = threading.Thread(target=process_messages, daemon=True)
     thread.start()
     yield
+    print("Lifespan shutdown")
     # Any cleanup code can go here, but in this case, we don't have any
 
 # Initialize the FastAPI application with lifespan
@@ -85,6 +97,7 @@ def read_notification(notification_id: int, db: Session = Depends(database.get_d
     if db_notification is None:
         raise HTTPException(status_code=404, detail="Notification not found")
     return db_notification
+
 
 
 
