@@ -19,8 +19,13 @@ app = FastAPI()
 # Initialize S3 client
 s3_client = boto3.client('s3')
 
+# Initialize SQS client
+sqs_client = boto3.client('sqs')
+
 # bucket name
 BUCKET_NAME = 'my-enhanced-project-bucket'
+# SQS queue URL (replace with your queue URL)
+QUEUE_URL = 'https://sqs.us-east-2.amazonaws.com/767397896582/MyQueue.fifo'
 
 # Dependency to get DB session
 def get_db():
@@ -87,11 +92,23 @@ async def download_file(filename: str):
 
 # Create a new booking and decrement available seats by -1 (include in response json)
 @app.post("/bookings/", response_model=schemas.BookingResponse)
-def create_booking(booking: schemas.BookingCreate, db: Session = Depends(get_db)):
+def create_booking(booking: schemas.BookingCreate, db: Session = Depends(database.get_db)):
     try:
         flight_details = get_flight_details(booking.flight_id)
         remaining_seats = decrement_flight_seats(flight_details)
         created_booking = crud.create_booking(db=db, booking=booking)
+        
+        # Send message to SQS
+        message = {
+            "booking_id": created_booking.id,
+            "customer_name": created_booking.customer_name,
+            "flight_number": created_booking.flight_number,
+            "seat_number": created_booking.seat_number,
+            "flight_id": created_booking.flight_id,
+            "booking_time": str(created_booking.booking_time)
+        }
+        sqs_client.send_message(QueueUrl=QUEUE_URL, MessageBody=str(message))
+        
         return {
             "id": created_booking.id,
             "customer_name": created_booking.customer_name,
