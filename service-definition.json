@@ -1,16 +1,18 @@
 {
   "cluster": "myCluster",
-  "serviceName": "myService",
-  "taskDefinition": "myTaskFamily",
+  "serviceName": "microservices-service",
+  "taskDefinition": "microservices-task",
   "desiredCount": 1,
   "launchType": "FARGATE",
   "networkConfiguration": {
     "awsvpcConfiguration": {
       "subnets": [
-        "your-subnet-id"
+        "subnet-0b55393e9c769d0e7",
+        "subnet-0c346762d9b71284b",
+        "subnet-00a35a6bfe0ce91e1"
       ],
       "securityGroups": [
-        "your-security-group-id"
+        "sg-09d13b27b8bb5cf3a"
       ],
       "assignPublicIp": "ENABLED"
     }
