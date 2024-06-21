@@ -1,0 +1,18 @@
+{
+  "cluster": "myCluster",
+  "serviceName": "myService",
+  "taskDefinition": "myTaskFamily",
+  "desiredCount": 1,
+  "launchType": "FARGATE",
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": [
+        "your-subnet-id"
+      ],
+      "securityGroups": [
+        "your-security-group-id"
+      ],
+      "assignPublicIp": "ENABLED"
+    }
+  }
+}

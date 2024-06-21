@@ -1,0 +1,64 @@
+{
+    "family": "myServiceTaskDefinition",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "booking-service",
+            "image": "resneak/booking-service:latest",
+            "essential": true,
+            "memory": 512,
+            "cpu": 256,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80
+                }
+            ]
+        },
+        {
+            "name": "notification-service",
+            "image": "resneak/notification-service:latest",
+            "essential": true,
+            "memory": 512,
+            "cpu": 256,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 81
+                }
+            ]
+        },
+        {
+            "name": "flight-management-service",
+            "image": "resneak/flight-management-service:latest",
+            "essential": true,
+            "memory": 512,
+            "cpu": 256,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 82
+                }
+            ]
+        },
+        {
+            "name": "payment-service",
+            "image": "resneak/payment-service:latest",
+            "essential": true,
+            "memory": 512,
+            "cpu": 256,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 83
+                }
+            ]
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "executionRoleArn": "arn:aws:iam::767397896582:role/ecsTaskExecutionRole"
+}
