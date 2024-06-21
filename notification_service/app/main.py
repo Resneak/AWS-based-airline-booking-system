@@ -52,7 +52,7 @@ def process_messages():
 
                 # Convert booking_time back to datetime if needed
                 if 'booking_time' in body:
-                    body['booking_time'] = datetime.datetime.fromisoformat(body['booking_time'])
+                    body['booking_time'] = datetime.fromisoformat(body['booking_time'])
 
                 print(f"Received message: {body}")
 
