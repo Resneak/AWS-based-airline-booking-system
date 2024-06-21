@@ -109,7 +109,11 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(databas
             "flight_id": created_booking.flight_id,
             "booking_time": str(created_booking.booking_time)
         }
-        sqs_client.send_message(QueueUrl=QUEUE_URL, MessageBody=json.dumps(message))  # Use json.dumps here
+        sqs_client.send_message(
+            QueueUrl=QUEUE_URL,
+            MessageBody=json.dumps(message),
+            MessageGroupId="bookingGroup"  # Add MessageGroupId here
+        )
         
         return {
             "id": created_booking.id,
