@@ -39,7 +39,7 @@ def process_messages():
 
         messages = response.get('Messages', [])
         for message in messages:
-            print(f"Raw message body: {message['Body']}")  # Add this line for debugging
+            #print(f"Raw message body: {message['Body']}")  # Add this line for debugging
 
             try:
                 # Try to load JSON with double quotes first
