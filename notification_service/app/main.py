@@ -17,6 +17,7 @@ import threading
 import time
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 # Create the database tables
 models.Base.metadata.create_all(bind=engine)
@@ -29,41 +30,36 @@ QUEUE_URL = 'https://sqs.us-east-2.amazonaws.com/767397896582/MyQueue.fifo'
 
 # Function to process messages from the SQS queue
 def process_messages():
-    print("Starting to process messages from SQS")
     while True:
-        try:
-            response = sqs_client.receive_message(
-                QueueUrl=QUEUE_URL,
-                MaxNumberOfMessages=1,
-                WaitTimeSeconds=10
-            )
+        response = sqs_client.receive_message(
+            QueueUrl=QUEUE_URL,
+            MaxNumberOfMessages=1,
+            WaitTimeSeconds=10
+        )
 
-            messages = response.get('Messages', [])
-            if not messages:
-                print("No messages received")
-            for message in messages:
-                print(f"Raw message body: {message['Body']}")  # Add this line for debugging
+        messages = response.get('Messages', [])
+        for message in messages:
+            print(f"Raw message body: {message['Body']}")  # Add this line for debugging
 
-                try:
-                    body = json.loads(message['Body'])
-                    print(f"Received message: {body}")
+            try:
+                body = json.loads(message['Body'])
+                
+                # Convert booking_time back to datetime if needed
+                if 'booking_time' in body:
+                    body['booking_time'] = datetime.datetime.fromisoformat(body['booking_time'])
 
-                    # Just print out whatever is in SQS, could send out emails/sms from here
-                    send_notification(body)
+                print(f"Received message: {body}")
 
-                    sqs_client.delete_message(
-                        QueueUrl=QUEUE_URL,
-                        ReceiptHandle=message['ReceiptHandle']
-                    )
-                except json.JSONDecodeError as e:
-                    print(f"JSON decode error: {e}")
-                    print(f"Failed message: {message['Body']}")
-        except NoCredentialsError:
-            print("Credentials not available")
-        except PartialCredentialsError:
-            print("Incomplete credentials provided")
-        except Exception as e:
-            print(f"Error: {e}")
+                # Just print out whatever is in SQS, could send out emails/sms from here
+                send_notification(body)
+
+                sqs_client.delete_message(
+                    QueueUrl=QUEUE_URL,
+                    ReceiptHandle=message['ReceiptHandle']
+                )
+            except json.JSONDecodeError as e:
+                print(f"JSON decode error: {e}")
+                print(f"Failed message: {message['Body']}")
 
         time.sleep(5)
 
