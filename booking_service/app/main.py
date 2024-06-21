@@ -10,6 +10,7 @@ import io
 from sqlalchemy.orm import Session
 import requests
 import boto3
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 # Create the database tables
 models.Base.metadata.create_all(bind=database.engine)
@@ -107,8 +108,20 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(databas
             "flight_id": created_booking.flight_id,
             "booking_time": str(created_booking.booking_time)
         }
-        sqs_client.send_message(QueueUrl=QUEUE_URL, MessageBody=str(message))
         
+        try:
+            response = sqs_client.send_message(
+                QueueUrl=QUEUE_URL,
+                MessageBody=str(message),
+                MessageGroupId="booking-group",
+                MessageDeduplicationId=str(created_booking.id)
+            )
+            print(f"Message sent to SQS: {response['MessageId']}")
+        except (NoCredentialsError, PartialCredentialsError) as e:
+            print(f"Credentials error: {e}")
+        except Exception as e:
+            print(f"Error sending message to SQS: {e}")
+
         return {
             "id": created_booking.id,
             "customer_name": created_booking.customer_name,
@@ -121,6 +134,7 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(databas
     except Exception as e:
         print(f"Error: {e}")  # Log the error for debugging
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
 
 # Read a booking by ID
 @app.get("/bookings/{booking_id}", response_model=schemas.BookingBase)
