@@ -1,16 +1,26 @@
 version: '3.8'
 
 services:
-  flight_management_service:
-    build:
-      context: ./flight_management_service
-    ports:
-      - "83:80"
-
   booking_service:
-    build:
-      context: ./booking_service
+    build: ./booking_service
     ports:
       - "80:80"
     depends_on:
       - flight_management_service
+    environment:
+      - DATABASE_URL=sqlite:///./test.db
+      - AWS_DEFAULT_REGION=us-east-2
+
+  flight_management_service:
+    build: ./flight_management_service
+    ports:
+      - "83:80"
+    environment:
+      - DATABASE_URL=sqlite:///./test.db
+
+  notification_service:
+    build: ./notification_service
+    depends_on:
+      - booking_service
+    environment:
+      - AWS_DEFAULT_REGION=us-east-2
