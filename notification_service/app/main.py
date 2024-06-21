@@ -1,6 +1,8 @@
-# Initialize the FastAPI application.
-# Create the database tables.
-# Define the API endpoints for creating and retrieving notifications.
+# Initialize the FastAPI application and database
+# Initialize the SQS client
+# Process messages from the SQS queue
+# Send notifications
+# Define API endpoints
 
 import crud, models, schemas, database
 from database import engine, SessionLocal
@@ -10,6 +12,8 @@ import boto3
 import json
 import time
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+import threading
+import uvicorn
 
 # Create the database tables
 models.Base.metadata.create_all(bind=engine)
@@ -18,7 +22,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # Initialize the SQS client
-sqs_client = boto3.client('sqs')
+sqs_client = boto3.client('sqs', region_name='us-east-2')
 
 # SQS queue URL
 QUEUE_URL = 'https://sqs.us-east-2.amazonaws.com/767397896582/MyQueue.fifo'
@@ -65,7 +69,9 @@ def read_notification(notification_id: int, db: Session = Depends(database.get_d
         raise HTTPException(status_code=404, detail="Notification not found")
     return db_notification
 
+# Start the message processing in a separate thread
 if __name__ == "__main__":
-    # Start processing messages from the SQS queue
-    process_messages()
+    threading.Thread(target=process_messages, daemon=True).start()
+    uvicorn.run(app, host="0.0.0.0", port=80)
+
 
