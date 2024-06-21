@@ -15,7 +15,15 @@
                     "containerPort": 80,
                     "hostPort": 80
                 }
-            ]
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/microservices-service",
+                    "awslogs-region": "us-east-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
         },
         {
             "name": "notification_service",
@@ -28,7 +36,15 @@
                     "containerPort": 84,
                     "hostPort": 84
                 }
-            ]
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/microservices-service",
+                    "awslogs-region": "us-east-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
         },
         {
             "name": "flight_management_service",
@@ -41,7 +57,15 @@
                     "containerPort": 83,
                     "hostPort": 83
                 }
-            ]
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/microservices-service",
+                    "awslogs-region": "us-east-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
         },
         {
             "name": "payment_service",
@@ -54,7 +78,15 @@
                     "containerPort": 82,
                     "hostPort": 82
                 }
-            ]
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/microservices-service",
+                    "awslogs-region": "us-east-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
         }
     ],
     "requiresCompatibilities": ["FARGATE"],
