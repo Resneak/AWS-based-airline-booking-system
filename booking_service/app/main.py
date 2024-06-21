@@ -124,8 +124,9 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(databas
             "flight_id": created_booking.flight_id,
             "booking_time": str(created_booking.booking_time)
         }
-        # Convert the booking to a dictionary
-        booking_dict = booking.dict()  
+        # Convert the booking to a dictionary and handle datetime serialization
+        booking_dict = booking.dict(by_alias=True)
+        booking_dict['booking_time'] = booking.booking_time.isoformat()
 
         # Send the booking message to the SQS queue
         response = sqs_client.send_message(
