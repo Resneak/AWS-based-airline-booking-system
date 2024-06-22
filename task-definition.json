@@ -12,7 +12,7 @@
             "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 80,
+                    "containerPort": 8080,
                     "protocol": "tcp"
                 }
             ],
@@ -33,7 +33,7 @@
             "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 84,
+                    "containerPort": 8081,
                     "protocol": "tcp"
                 }
             ],
@@ -54,7 +54,7 @@
             "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 83,
+                    "containerPort": 8082,
                     "protocol": "tcp"
                 }
             ],
@@ -75,7 +75,7 @@
             "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 82,
+                    "containerPort": 8083,
                     "protocol": "tcp"
                 }
             ],
