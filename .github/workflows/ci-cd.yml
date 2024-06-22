@@ -29,7 +29,6 @@ jobs:
       - name: Install dependencies for Booking Service
         run: |
           cd booking_service/app
-          ls -R
           pip install -r requirements.txt
 
       - name: Run tests for Booking Service
@@ -37,48 +36,7 @@ jobs:
           cd booking_service/app
           # Add your test command here
 
-      # Flight Management Service
-      - name: Install dependencies for Flight Management Service
-        run: |
-          cd flight_management_service/app
-          ls -R
-          pip install -r requirements.txt
-
-      - name: Run tests for Flight Management Service
-        run: |
-          cd flight_management_service/app
-          # Add your test command here
-
-      # Notification Service
-      - name: Install dependencies for Notification Service
-        run: |
-          cd notification_service/app
-          ls -R
-          pip install -r requirements.txt
-
-      - name: Run tests for Notification Service
-        run: |
-          cd notification_service/app
-          # Add your test command here
-
-      # Payment Service
-      - name: Install dependencies for Payment Service
-        run: |
-          cd payment_service/app
-          ls -R
-          pip install -r requirements.txt
-
-      - name: Run tests for Payment Service
-        run: |
-          cd payment_service/app
-          # Add your test command here
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+      # Other services similar steps...
 
       - name: Log in to Amazon ECR
         id: login-ecr
@@ -86,25 +44,28 @@ jobs:
 
       - name: Build, tag, and push Docker images
         run: |
-          cd booking_service
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/booking_service:latest .
-          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/booking_service:latest
-          cd ..
+          cd booking_service/app
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service .
+          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service
+          cd ../../..
 
-          cd flight_management_service
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/flight_management_service:latest .
-          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/flight_management_service:latest
-          cd ..
+          cd flight_management_service/app
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service .
+          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service
+          cd ../../..
 
-          cd notification_service
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/notification_service:latest .
-          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/notification_service:latest
-          cd ..
+          cd notification_service/app
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service .
+          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service
+          cd ../../..
 
-          cd payment_service
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/payment_service:latest .
-          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/payment_service:latest
-          cd ..
+          cd payment_service/app
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service .
+          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service
+          cd ../../..
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Update ECS service with new task definition
         run: |
@@ -113,3 +74,4 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
