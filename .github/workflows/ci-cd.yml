@@ -36,15 +36,42 @@ jobs:
           cd booking_service/app
           # Add your test command here
 
-      # Other services similar steps...
+      # Flight Management Service
+      - name: Install dependencies for Flight Management Service
+        run: |
+          cd flight_management_service/app
+          pip install -r requirements.txt
+
+      - name: Run tests for Flight Management Service
+        run: |
+          cd flight_management_service/app
+          # Add your test command here
+
+      # Notification Service
+      - name: Install dependencies for Notification Service
+        run: |
+          cd notification_service/app
+          pip install -r requirements.txt
+
+      - name: Run tests for Notification Service
+        run: |
+          cd notification_service/app
+          # Add your test command here
+
+      # Payment Service
+      - name: Install dependencies for Payment Service
+        run: |
+          cd payment_service/app
+          pip install -r requirements.txt
+
+      - name: Run tests for Payment Service
+        run: |
+          cd payment_service/app
+          # Add your test command here
 
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-        with:
-          mask-password: false
-          registry-type: private
-          skip-logout: false
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -52,25 +79,17 @@ jobs:
 
       - name: Build, tag, and push Docker images
         run: |
-          cd booking_service/app
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service .
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service -f booking_service/Dockerfile .
           docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service
-          cd ../../..
 
-          cd flight_management_service/app
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service .
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service -f flight_management_service/Dockerfile .
           docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service
-          cd ../../..
 
-          cd notification_service/app
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service .
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service -f notification_service/Dockerfile .
           docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service
-          cd ../../..
 
-          cd payment_service/app
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service .
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service -f payment_service/Dockerfile .
           docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service
-          cd ../../..
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -83,5 +102,3 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-
