@@ -10,13 +10,14 @@ class PaymentBase(BaseModel):
     amount: float
     currency: str
     status: str
-    method: str
+    payment_method: str
 
 class PaymentCreate(PaymentBase):
     pass
 
 class Payment(PaymentBase):
-    id: int
+    payment_id: str
 
     class Config:
-        orm_mode = True # enables automatic conversion
+        orm_mode = True  # enables automatic conversion
+
