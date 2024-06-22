@@ -73,11 +73,16 @@ jobs:
           cd payment_service/app
           # Add your test command here
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Build, tag, and push Docker images
         run: |
@@ -100,9 +105,6 @@ jobs:
           docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/payment_service:latest .
           docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/payment_service:latest
           cd ../../..
-        env:
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Update ECS service with new task definition
         run: |
