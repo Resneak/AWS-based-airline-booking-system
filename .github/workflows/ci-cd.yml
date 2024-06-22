@@ -76,27 +76,29 @@ jobs:
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          region: us-east-2
 
       - name: Build, tag, and push Docker images
         run: |
           cd booking_service/app
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/booking_service:latest .
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/booking_service:latest
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/booking_service:latest .
+          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/booking_service:latest
           cd ../../..
 
           cd flight_management_service/app
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/flight_management_service:latest .
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/flight_management_service:latest
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/flight_management_service:latest .
+          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/flight_management_service:latest
           cd ../../..
 
           cd notification_service/app
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/notification_service:latest .
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/notification_service:latest
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/notification_service:latest .
+          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/notification_service:latest
           cd ../../..
 
           cd payment_service/app
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/payment_service:latest .
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/payment_service:latest
+          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/payment_service:latest .
+          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/payment_service:latest
           cd ../../..
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
