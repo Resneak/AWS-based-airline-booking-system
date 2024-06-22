@@ -86,25 +86,25 @@ jobs:
 
       - name: Build, tag, and push Docker images
         run: |
-          cd booking_service/app
+          cd booking_service
           docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/booking_service:latest .
           docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/booking_service:latest
-          cd ../../..
+          cd ..
 
-          cd flight_management_service/app
+          cd flight_management_service
           docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/flight_management_service:latest .
           docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/flight_management_service:latest
-          cd ../../..
+          cd ..
 
-          cd notification_service/app
+          cd notification_service
           docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/notification_service:latest .
           docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/notification_service:latest
-          cd ../../..
+          cd ..
 
-          cd payment_service/app
+          cd payment_service
           docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/payment_service:latest .
           docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/payment_service:latest
-          cd ../../..
+          cd ..
 
       - name: Update ECS service with new task definition
         run: |
