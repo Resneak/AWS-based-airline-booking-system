@@ -12,7 +12,8 @@
             "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 80
+                    "containerPort": 80,
+                    "protocol": "tcp"
                 }
             ],
             "logConfiguration": {
@@ -32,7 +33,8 @@
             "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 80
+                    "containerPort": 84,
+                    "protocol": "tcp"
                 }
             ],
             "logConfiguration": {
@@ -52,7 +54,8 @@
             "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 80
+                    "containerPort": 83,
+                    "protocol": "tcp"
                 }
             ],
             "logConfiguration": {
@@ -72,7 +75,8 @@
             "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 80
+                    "containerPort": 82,
+                    "protocol": "tcp"
                 }
             ],
             "logConfiguration": {
