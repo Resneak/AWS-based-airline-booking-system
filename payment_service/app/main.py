@@ -8,6 +8,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import boto3
 import uuid
+from decimal import Decimal
 
 # Initialize the FastAPI application
 app = FastAPI()
@@ -24,7 +25,7 @@ def create_payment(payment: schemas.PaymentCreate):
         table.put_item(
             Item={
                 'payment_id': payment_id,
-                'amount': payment.amount,
+                'amount': Decimal(str(payment.amount)),
                 'currency': payment.currency,
                 'status': payment.status,
                 'payment_method': payment.payment_method
@@ -51,3 +52,4 @@ def read_payment(payment_id: str):
         return item
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
