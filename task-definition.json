@@ -6,7 +6,7 @@
     "containerDefinitions": [
         {
             "name": "booking_service",
-            "image": "resneak/booking-service:latest",
+            "image": "767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service",
             "cpu": 256,
             "memory": 512,
             "essential": true,
@@ -27,7 +27,7 @@
         },
         {
             "name": "notification_service",
-            "image": "resneak/notification-service:latest",
+            "image": "767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service",
             "cpu": 256,
             "memory": 512,
             "essential": true,
@@ -48,7 +48,7 @@
         },
         {
             "name": "flight_management_service",
-            "image": "resneak/flight-management-service:latest",
+            "image": "767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service",
             "cpu": 256,
             "memory": 512,
             "essential": true,
@@ -69,7 +69,7 @@
         },
         {
             "name": "payment_service",
-            "image": "resneak/payment-service:latest",
+            "image": "767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service",
             "cpu": 256,
             "memory": 512,
             "essential": true,
