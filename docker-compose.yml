@@ -21,9 +21,17 @@ services:
   notification_service:
     build: ./notification_service
     ports:
-      - "84:80"  # Expose port 80 in the container to port 84 on the host
+      - "84:80"
     depends_on:
       - booking_service
     environment:
       - AWS_DEFAULT_REGION=us-east-2
       - QUEUE_URL=https://sqs.us-east-2.amazonaws.com/767397896582/MyQueue.fifo
+
+  payment_service:
+    build: ./payment_service
+    ports:
+      - "82:80"
+    environment:
+      - AWS_DEFAULT_REGION=us-east-2
+      - DYNAMODB_TABLE=Payments
