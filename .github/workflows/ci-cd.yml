@@ -11,49 +11,101 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      # Booking Service
+      - name: Install dependencies for Booking Service
+        run: |
+          cd booking_service/app
+          pip install -r requirements.txt
+        working-directory: booking_service/app
 
-      - name: Run tests
-        run: pytest
+      - name: Run tests for Booking Service
+        run: |
+          cd booking_service/app
+          # Add your test command here
+        working-directory: booking_service/app
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      # Flight Management Service
+      - name: Install dependencies for Flight Management Service
+        run: |
+          cd flight_management_service/app
+          pip install -r requirements.txt
+        working-directory: flight_management_service/app
 
-      - name: Login to Amazon ECR
+      - name: Run tests for Flight Management Service
+        run: |
+          cd flight_management_service/app
+          # Add your test command here
+        working-directory: flight_management_service/app
+
+      # Notification Service
+      - name: Install dependencies for Notification Service
+        run: |
+          cd notification_service/app
+          pip install -r requirements.txt
+        working-directory: notification_service/app
+
+      - name: Run tests for Notification Service
+        run: |
+          cd notification_service/app
+          # Add your test command here
+        working-directory: notification_service/app
+
+      # Payment Service
+      - name: Install dependencies for Payment Service
+        run: |
+          cd payment_service/app
+          pip install -r requirements.txt
+        working-directory: payment_service/app
+
+      - name: Run tests for Payment Service
+        run: |
+          cd payment_service/app
+          # Add your test command here
+        working-directory: payment_service/app
+
+      - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-        with:
-          registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          region: ${{ secrets.AWS_REGION }}
-          access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
-          secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
 
-      - name: Build and push Docker image
+      - name: Build, tag, and push Docker images
         run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fastapi-app:latest .
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fastapi-app:latest
+          cd booking_service/app
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/booking_service:latest .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/booking_service:latest
+          cd ../../..
 
-      - name: Deploy to ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          service: microservices-service
-          cluster: myCluster
-          wait-for-service-stability: true
-          access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
-          secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
-          region: ${{ secrets.AWS_REGION }}
+          cd flight_management_service/app
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/flight_management_service:latest .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/flight_management_service:latest
+          cd ../../..
+
+          cd notification_service/app
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/notification_service:latest .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/notification_service:latest
+          cd ../../..
+
+          cd payment_service/app
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/payment_service:latest .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/payment_service:latest
+          cd ../../..
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Update ECS service with new task definition
+        run: |
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER_NAME }} --service ${{ secrets.ECS_SERVICE_NAME }} --force-new-deployment
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
