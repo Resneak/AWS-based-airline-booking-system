@@ -21,57 +21,57 @@ jobs:
         with:
           python-version: 3.9
 
+      - name: List directory contents
+        run: ls -R
+        working-directory: .
+
       # Booking Service
       - name: Install dependencies for Booking Service
         run: |
           cd booking_service/app
+          ls -R
           pip install -r requirements.txt
-        working-directory: booking_service/app
 
       - name: Run tests for Booking Service
         run: |
           cd booking_service/app
           # Add your test command here
-        working-directory: booking_service/app
 
       # Flight Management Service
       - name: Install dependencies for Flight Management Service
         run: |
           cd flight_management_service/app
+          ls -R
           pip install -r requirements.txt
-        working-directory: flight_management_service/app
 
       - name: Run tests for Flight Management Service
         run: |
           cd flight_management_service/app
           # Add your test command here
-        working-directory: flight_management_service/app
 
       # Notification Service
       - name: Install dependencies for Notification Service
         run: |
           cd notification_service/app
+          ls -R
           pip install -r requirements.txt
-        working-directory: notification_service/app
 
       - name: Run tests for Notification Service
         run: |
           cd notification_service/app
           # Add your test command here
-        working-directory: notification_service/app
 
       # Payment Service
       - name: Install dependencies for Payment Service
         run: |
           cd payment_service/app
+          ls -R
           pip install -r requirements.txt
-        working-directory: payment_service/app
 
       - name: Run tests for Payment Service
         run: |
           cd payment_service/app
           # Add your test command here
-        working-directory: payment_service/app
 
       - name: Log in to Amazon ECR
         id: login-ecr
