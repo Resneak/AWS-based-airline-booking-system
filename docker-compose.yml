@@ -4,7 +4,7 @@ services:
   booking_service:
     build: ./booking_service
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - flight_management_service
     environment:
@@ -14,14 +14,14 @@ services:
   flight_management_service:
     build: ./flight_management_service
     ports:
-      - "83:80"
+      - "8082:80"
     environment:
       - DATABASE_URL=sqlite:///./test.db
 
   notification_service:
     build: ./notification_service
     ports:
-      - "84:80"
+      - "8081:80"
     depends_on:
       - booking_service
     environment:
@@ -31,7 +31,7 @@ services:
   payment_service:
     build: ./payment_service
     ports:
-      - "82:80"
+      - "8083:80"
     environment:
       - AWS_DEFAULT_REGION=us-east-2
       - DYNAMODB_TABLE=Payments
