@@ -58,6 +58,10 @@ Each service has its own API documentation available at the following URLs:
 - [Notification Service API](http://18.219.238.65:81/docs)
 - [Payment Service API](http://18.219.238.65:84/docs)
 
+### Medium Article
+
+[Medium Article](https://medium.com/@ndaniel275/improving-my-aws-cloud-based-airline-booking-service-from-prototype-to-production-c994bd578f0a)
+
 ## Contributing
 
 Contributions are welcome! Please fork the repository and use a feature branch. Pull requests are warmly welcome.
