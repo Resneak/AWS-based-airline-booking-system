@@ -1,15 +1,80 @@
-# Cloud-based Microservices Application
+### Enhanced Cloud-Based Airline Booking Service Project Outline
 
-## Core Microservices
-- **Booking Service:**
-  - Manages customer flight bookings
-  - Handles seat selection and reservation status
-- **Payment Service (Simulated):**
-  - Simulates payment processing logic
-  - Manages payment methods and transaction records (mock data)
-- **Notification Service:**
-  - Sends booking confirmations and updates to customers
-  - Handles email and SMS notifications
-- **Flight Management Service:**
-  - Manages flight schedules, availability, and cancellations
-  - Updates flight status in real-time
+#### 1. **Project Overview**
+   - **Objective:** Build an enhanced cloud-based airline booking service that integrates multiple microservices using modern technologies, including AWS services, for scalability and robustness.
+   - **Technologies:** FastAPI, Spring Boot, SQLAlchemy, Docker, AWS (EC2, ECS, Lambda, S3, RDS, DynamoDB, SQS, CloudWatch), PostgreSQL.
+
+#### 2. **Project Architecture**
+   - **Microservices:** Booking Service, Payment Service, Notification Service, Flight Management Service.
+   - **AWS Integration:** Each service will be deployed using AWS services for improved scalability, reliability, and maintainability.
+
+#### 3. **Microservices Overview**
+   - **Booking Service:**
+     - **Endpoints:** Create booking, Get booking details.
+     - **Database:** PostgreSQL on AWS RDS.
+   - **Payment Service:**
+     - **Endpoints:** Process payment, Get payment status.
+     - **Database:** DynamoDB.
+   - **Notification Service:**
+     - **Endpoints:** Send notification.
+     - **Database:** None, uses AWS SQS and Lambda.
+   - **Flight Management Service:**
+     - **Endpoints:** Create flight, Get flight details, Update flight status.
+     - **Database:** PostgreSQL on AWS RDS.
+
+#### 4. **AWS Services Integration**
+   - **EC2:**
+     - Deploy backend services on EC2 instances.
+   - **ECS:**
+     - Containerize and deploy microservices using ECS.
+   - **S3:**
+     - Store static assets and media files.
+   - **RDS:**
+     - Use PostgreSQL for Booking and Flight Management services.
+   - **DynamoDB:**
+     - Use for Payment Service to store transaction details.
+   - **Lambda:**
+     - Implement serverless functions for the Notification Service.
+   - **SQS:**
+     - Use for message queuing between services.
+   - **CloudWatch:**
+     - Monitor application logs and metrics.
+
+#### 5. **CI/CD Pipeline**
+   - **CodePipeline:**
+     - Set up CI/CD pipeline using AWS CodePipeline for automated testing and deployment.
+   - **Stages:**
+     - Source: Connect to GitHub repository.
+     - Build: Use CodeBuild to build Docker images.
+     - Test: Automated testing using pytest for FastAPI and JUnit for Spring Boot.
+     - Deploy: Deploy to AWS services.
+
+#### 6. **Development Process**
+   - **Set Up AWS Environment:**
+     - Create an AWS account and configure IAM roles and permissions.
+   - **Deploy Backend Services on EC2:**
+     - Launch EC2 instances, install dependencies, and deploy FastAPI and Spring Boot applications.
+   - **Containerize and Deploy Using ECS:**
+     - Write Dockerfiles, build images, and deploy using ECS.
+   - **Use S3 for Static Assets:**
+     - Create S3 buckets and upload static assets.
+   - **Use RDS for PostgreSQL:**
+     - Create RDS instances and connect applications.
+   - **Integrate DynamoDB:**
+     - Create DynamoDB tables and integrate with Payment Service.
+   - **Implement Serverless Functions with Lambda:**
+     - Create Lambda functions for Notification Service.
+   - **Set Up SQS for Messaging:**
+     - Create SQS queues and integrate with microservices.
+   - **Monitor with CloudWatch:**
+     - Set up CloudWatch for logs and metrics.
+   - **CI/CD with AWS CodePipeline:**
+     - Create and configure CI/CD pipeline.
+
+#### 7. **Testing and Validation**
+   - **Unit Testing:**
+     - Write unit tests for each service.
+   - **Integration Testing:**
+     - Test the integration between services and AWS components.
+   - **Load Testing:**
+     - Perform load testing to ensure scalability and performance.

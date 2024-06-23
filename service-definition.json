@@ -7,12 +7,12 @@
   "networkConfiguration": {
     "awsvpcConfiguration": {
       "subnets": [
-        "subnet-0b55393e9c769d0e7",
-        "subnet-0c346762d9b71284b",
-        "subnet-00a35a6bfe0ce91e1"
+        "subnet-<SUBNET_ID_1>",
+		"subnet-<SUBNET_ID_2>",
+		"subnet-<SUBNET_ID_3>"
       ],
       "securityGroups": [
-        "sg-09d13b27b8bb5cf3a"
+        "sg-<SECURITY_GROUP_ID>"
       ],
       "assignPublicIp": "ENABLED"
     }

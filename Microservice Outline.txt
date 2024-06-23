@@ -1,6 +1,0 @@
-## Microservices Architecture
-- Each service communicates through RESTful APIs.
-- Services are independently deployable and scalable.
-- Use API Gateway for routing and managing API requests.
-- Implement Docker for containerization.
-- Store data in RDS instances specific to each service.
