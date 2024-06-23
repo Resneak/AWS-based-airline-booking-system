@@ -14,14 +14,14 @@ services:
   flight_management_service:
     build: ./flight_management_service
     ports:
-      - "83:80"
+      - "83:82"  # Expose port 82 in the container to port 83 on the host
     environment:
       - DATABASE_URL=sqlite:///./test.db
 
   notification_service:
     build: ./notification_service
     ports:
-      - "84:80"  # Expose port 80 in the container to port 84 on the host
+      - "84:81"  # Expose port 81 in the container to port 84 on the host
     depends_on:
       - booking_service
     environment:
@@ -31,7 +31,7 @@ services:
   payment_service:
     build: ./payment_service
     ports:
-      - "85:80"
+      - "85:84"  # Expose port 84 in the container to port 85 on the host
     environment:
       - AWS_DEFAULT_REGION=us-east-2
       - DYNAMODB_TABLE=Payments
