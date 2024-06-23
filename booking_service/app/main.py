@@ -49,7 +49,7 @@ def get_db():
 
 # Interact with the Flight Management Service
 def get_flight_details(flight_id: int):
-    response = requests.get(f"http://flight_management_service:80/flights/{flight_id}")
+    response = requests.get(f"http://flight_management_service:82/flights/{flight_id}")
     if response.status_code == 200:
         return response.json()
     else:
