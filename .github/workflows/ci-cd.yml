@@ -79,17 +79,17 @@ jobs:
 
       - name: Build, tag, and push Docker images
         run: |
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service -f booking_service/Dockerfile booking_service
-          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service
+          docker build -t <AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service -f booking_service/Dockerfile booking_service
+          docker push <AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service
 
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service -f flight_management_service/Dockerfile flight_management_service
-          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service
+          docker build -t <AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service -f flight_management_service/Dockerfile flight_management_service
+          docker push <AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service
 
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service -f notification_service/Dockerfile notification_service
-          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service
+          docker build -t <AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service -f notification_service/Dockerfile notification_service
+          docker push <AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service
 
-          docker build -t 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service -f payment_service/Dockerfile payment_service
-          docker push 767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service
+          docker build -t <AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service -f payment_service/Dockerfile payment_service
+          docker push <AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

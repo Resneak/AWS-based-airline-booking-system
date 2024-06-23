@@ -8,7 +8,7 @@
                 "sqs:DeleteMessage",
                 "sqs:GetQueueAttributes"
             ],
-            "Resource": "arn:aws:sqs:us-east-2:767397896582:MyQueue.fifo"
+            "Resource": "arn:aws:sqs:us-east-2:<AWS_ACCOUNT_ID>:MyQueue.fifo"
         }
     ]
 }

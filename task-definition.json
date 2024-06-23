@@ -1,12 +1,12 @@
 {
     "family": "microservices-task",
     "networkMode": "awsvpc",
-    "executionRoleArn": "arn:aws:iam::767397896582:role/ecsTaskExecutionRole",
-    "taskRoleArn": "arn:aws:iam::767397896582:role/ecsTaskRole",
+    "executionRoleArn": "arn:aws:iam::<AWS_ACCOUNT_ID>:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::<AWS_ACCOUNT_ID>:role/ecsTaskRole",
     "containerDefinitions": [
         {
             "name": "booking_service",
-            "image": "767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service",
+            "image": "<AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:booking_service",
             "cpu": 256,
             "memory": 512,
             "essential": true,
@@ -28,7 +28,7 @@
         },
         {
             "name": "notification_service",
-            "image": "767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service",
+            "image": "<AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:notification_service",
             "cpu": 256,
             "memory": 512,
             "essential": true,
@@ -50,7 +50,7 @@
         },
         {
             "name": "flight_management_service",
-            "image": "767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service",
+            "image": "<AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:flight_management_service",
             "cpu": 256,
             "memory": 512,
             "essential": true,
@@ -72,7 +72,7 @@
         },
         {
             "name": "payment_service",
-            "image": "767397896582.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service",
+            "image": "<AWS_ACCOUNT_ID>.dkr.ecr.us-east-2.amazonaws.com/fastapi-app:payment_service",
             "cpu": 256,
             "memory": 512,
             "essential": true,
